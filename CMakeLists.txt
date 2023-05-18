@@ -9,10 +9,4 @@ find_package(Boost 1.82 COMPONENTS program_options REQUIRED)
 enable_testing()
 find_package(GTest REQUIRED)
 
-# Logger
-add_subdirectory(spdlog)
-link_libraries(spdlog::spdlog_header_only)
-
 add_subdirectory(client)
-add_subdirectory(server)
-add_subdirectory(test_client)

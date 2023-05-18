@@ -47,7 +47,7 @@ std::pair<std::string, std::string> BasicPluginWrapper::get_default_config() {
         json response_message = json::parse(response.second);
         if (response_message.at("status").get<int>() != 0)
             return {"", response_message.at("error").get<std::string>()};
-        return {response_message.at("result").dump(),
+        return {response_message.at("result").dump(2),
                 response_message.at("error").get<std::string>()};
     } catch (...) {
         return {"", "Wrong response format"};
@@ -67,7 +67,7 @@ std::pair<std::string, std::string> BasicPluginWrapper::get_default_scheme() {
         json response_message = json::parse(response.second);
         if (response_message.at("status").get<int>() != 0)
             return {"", response_message.at("error").get<std::string>()};
-        return {response_message.at("result").dump(),
+        return {response_message.at("result").dump(2),
                 response_message.at("error").get<std::string>()};
     } catch (...) {
         return {"", "Wrong response format"};

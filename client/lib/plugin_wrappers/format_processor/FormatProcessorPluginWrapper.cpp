@@ -11,7 +11,7 @@ using namespace nlohmann;
 
 FormatProcessorPluginWrapper::FormatProcessorPluginWrapper(
     std::shared_ptr<IRequestable> connection)
-    : BasicPluginWrapper(std::move(connection), "format_processor") {
+    : BasicPluginWrapper(std::move(connection), "format") {
 }
 
 std::string FormatProcessorPluginWrapper::save(const std::string &cards_path,

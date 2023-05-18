@@ -12,7 +12,7 @@ using namespace nlohmann;
 
 SentencePluginWrapper::SentencePluginWrapper(
     std::shared_ptr<IRequestable> connection)
-    : BasicPluginWrapper(std::move(connection), "sentence") {
+    : BasicPluginWrapper(std::move(connection), "sentences") {
 }
 
 std::pair<std::vector<std::string>, std::string>
@@ -20,7 +20,7 @@ SentencePluginWrapper::get(const std::string &word, size_t batch_size) {
     json request_message = {
         {"query_type",  "get"       },
         {"plugin_type", plugin_type_},
-        {"query",       word        },
+        {"word",        word        },
         {"batch_size",  batch_size  },
     };
     std::pair<bool, std::string> response(

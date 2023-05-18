@@ -10,7 +10,7 @@ using namespace nlohmann;
 using audio_vector = std::vector<std::pair<std::string, std::string>>;
 
 AudioPluginWrapper::AudioPluginWrapper(std::shared_ptr<IRequestable> connection)
-    : BasicPluginWrapper(std::move(connection), "audio") {
+    : BasicPluginWrapper(std::move(connection), "audios") {
 }
 
 std::pair<audio_vector, std::string>
@@ -18,7 +18,7 @@ AudioPluginWrapper::get(const std::string &word, size_t batch_size) {
     json request_message = {
         {"query_type",  "get"       },
         {"plugin_type", plugin_type_},
-        {"query",       "test_word"},
+        {"word",        word        },
         {"batch_size",  batch_size  },
     };
     std::pair<bool, std::string> response(

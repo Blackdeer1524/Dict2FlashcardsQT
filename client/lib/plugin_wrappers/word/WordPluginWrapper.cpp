@@ -1,7 +1,7 @@
 #include "WordPluginWrapper.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -20,12 +20,12 @@ WordPluginWrapper::get(const std::string &word,
                        size_t             batch_size,
                        bool               reload) {
     json request_message = {
-        {"query_type",     "get"         },
-        {"plugin_type",    plugin_type_  },
-        {"word",          word          },
-        {"filter", query_language},
-        {"batch_size",     batch_size    },
-        {"restart",         reload}
+        {"query_type",  "get"         },
+        {"plugin_type", plugin_type_  },
+        {"word",        word          },
+        {"filter",      query_language},
+        {"batch_size",  batch_size    },
+        {"restart",     reload        }
     };
     std::pair<bool, std::string> response(
         std::move(connection_->request(request_message.dump())));
@@ -56,7 +56,7 @@ std::pair<std::string, std::string> WordPluginWrapper::get_dict_scheme() {
         json response_message = json::parse(response.second);
         if (response_message.at("status").get<int>() != 0)
             return {"", response_message.at("error").get<std::string>()};
-        return {response_message.at("result").dump(),
+        return {response_message.at("result").dump(2),
                 response_message.at("error").get<std::string>()};
     } catch (...) {
         return {"", "Wrong response format"};

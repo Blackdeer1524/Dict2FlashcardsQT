@@ -38,8 +38,7 @@ TEST(WordPWGet, PartialSuccess) {
                 "examples":["go somewhere"],
                 "image_links":[],
                 "audio_links":[],
-                "tags":{"tag":"tag"},
-                "other":{"other":"other"}
+                "tags":{"tag":"tag"}
             }],
             "error":"something"})";
     auto              fixed_answer = std::make_shared<FixedAnswer>(answer);
@@ -48,18 +47,14 @@ TEST(WordPWGet, PartialSuccess) {
     std::pair<std::vector<Card>, std::string> actual =
         wrapper.get("go", "pos::noun", 1, true);
     std::pair<std::vector<Card>, std::string> expected = {
-        {Card{
-            "go",
-            {"something special"},
-            "move",
-            {"go somewhere"},
-            std::vector<std::string>(),
-            std::vector<std::string>(),
-            json({{"tag", "tag"}}),
-            json({{"other", "other"}}),
-        }},
-        "something"
-    };
+        {Card{"go",
+              {"something special"},
+              "move",
+              {"go somewhere"},
+              std::vector<std::string>(),
+              std::vector<std::string>(),
+              "tag::tag"}},
+        "something"};
     EXPECT_EQ(expected, actual);
 }
 

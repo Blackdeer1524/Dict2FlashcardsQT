@@ -1,6 +1,7 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -13,27 +14,15 @@ struct Card {
     std::vector<std::string> examples;
     std::vector<std::string> image_links;
     std::vector<std::string> audio_links;
-    nlohmann::json           tags;
-    nlohmann::json           other;
+    std::string              tags;
 };
 
-inline void from_json(const nlohmann::json &j, Card &card) {
-    j.at("word").get_to(card.word);
-    j.at("special").get_to(card.special);
-    j.at("definition").get_to(card.definition);
-    j.at("examples").get_to(card.examples);
-    j.at("image_links").get_to(card.image_links);
-    j.at("audio_links").get_to(card.audio_links);
-    j.at("tags").get_to(card.tags);
-    j.at("other").get_to(card.other);
-}
-
-inline bool operator==(const Card &lhs, const Card &rhs) {
-    return lhs.word == rhs.word && lhs.special == rhs.special &&
-           lhs.definition == rhs.definition && lhs.examples == rhs.examples &&
-           lhs.image_links == rhs.image_links &&
-           lhs.audio_links == rhs.audio_links && lhs.tags == rhs.tags &&
-           lhs.other == rhs.other;
-}
+void          traverse_tags(const nlohmann::json &tags,
+                            const std::string    &prefix,
+                            std::string          &result);
+std::string   parse_tags(const nlohmann::json &tags);
+void          from_json(const nlohmann::json &j, Card &card);
+bool          operator==(const Card &lhs, const Card &rhs);
+std::ostream &operator<<(std::ostream &os, const Card &card);
 
 #endif  // CARD_H

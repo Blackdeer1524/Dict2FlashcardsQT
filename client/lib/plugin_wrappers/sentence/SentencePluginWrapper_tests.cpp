@@ -18,10 +18,10 @@ TEST(SentensePWGet, Output) {
 
     json actual   = json::parse(memorizer->received_message);
     json expected = {
-        {"query_type",  "get"     },
-        {"plugin_type", "sentence"},
-        {"query",       "test_word"},
-        {"batch_size",  5         },
+        {"query_type",  "get"      },
+        {"plugin_type", "sentences"},
+        {"word",        "test_word"},
+        {"batch_size",  5          },
     };
     EXPECT_EQ(expected, actual);
 }

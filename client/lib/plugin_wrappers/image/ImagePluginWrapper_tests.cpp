@@ -19,8 +19,8 @@ TEST(ImagePWGet, Output) {
     json actual   = json::parse(memorizer->received_message);
     json expected = {
         {"query_type",  "get"      },
-        {"plugin_type", "image"    },
-        {"query",       "test_word"},
+        {"plugin_type", "images"    },
+        {"word",       "test_word"},
         {"batch_size",  5          },
     };
     EXPECT_EQ(expected, actual);

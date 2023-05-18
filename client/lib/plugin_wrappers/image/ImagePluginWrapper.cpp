@@ -9,7 +9,7 @@
 using namespace nlohmann;
 
 ImagePluginWrapper::ImagePluginWrapper(std::shared_ptr<IRequestable> connection)
-    : BasicPluginWrapper(std::move(connection), "image") {
+    : BasicPluginWrapper(std::move(connection), "images") {
 }
 
 std::pair<std::vector<std::string>, std::string>
@@ -17,7 +17,7 @@ ImagePluginWrapper::get(const std::string &word, size_t batch_size) {
     json request_message = {
         {"query_type",  "get"       },
         {"plugin_type", plugin_type_},
-        {"query",       word        },
+        {"word",        word        },
         {"batch_size",  batch_size  },
     };
     std::pair<bool, std::string> response(

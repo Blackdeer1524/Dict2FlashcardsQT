@@ -3,7 +3,7 @@
 
 class interpreter : ExprVisitor {
  public:
-    interpreter();
+    interpreter() = default;
     Value interpret(Expr *expression, nlohmann::json card_);
 
  private:

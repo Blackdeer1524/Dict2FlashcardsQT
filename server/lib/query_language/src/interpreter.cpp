@@ -1,7 +1,5 @@
 #include "interpreter.hpp"
 
-interpreter::interpreter(){};
-
 Value interpreter::interpret(Expr *expression, nlohmann::json card_) {
     card = card_;
     return evaluate(expression);

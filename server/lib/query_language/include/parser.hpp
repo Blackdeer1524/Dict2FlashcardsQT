@@ -4,7 +4,7 @@
 
 class parser {
  public:
-    parser(std::vector<token> &t);
+    parser(std::vector<token> &tok);
     std::unique_ptr<Expr> parse();
 
  private:
@@ -13,7 +13,7 @@ class parser {
     int                      current = 0;
     bool                     is_at_end();
     bool                     check(token_type type);
-    bool                     match(std::vector<token_type> types);
+    bool                     match(const std::vector<token_type> &types);
     token                    peek();
     token                    previous();
     token                    advance();

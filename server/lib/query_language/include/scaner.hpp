@@ -65,10 +65,8 @@ using tt = token_type;
 struct token {
     token();
     token(token_type type);
-    token(token_type type, const std::string &lexeme);
-    token(token_type         type,
-          const std::string &lexeme,
-          const std::string &literal);
+    token(token_type type, std::string lexeme);
+    token(token_type type, std::string lexeme, std::string literal);
     token_type  type;
     std::string lexeme;
     std::string literal;
@@ -76,7 +74,7 @@ struct token {
 
 class scanner {
  public:
-    scanner(const std::string &s);
+    scanner(std::string s);
     std::vector<token> scan_tokens();
 
  private:
@@ -88,7 +86,7 @@ class scanner {
 
     void                              init_keywords();
     bool                              has_next(size_t i = 0);
-    bool                              is_digit(char ch);
+    static bool                       is_digit(char ch);
     void                              add_token(token_type type);
     void add_token(token_type type, const std::string &literal);
     char advance();

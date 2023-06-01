@@ -1,19 +1,19 @@
 #include "scaner.hpp"
 
+#include <utility>
+
 token::token() : type(token_type::NUL) {
 }
 
 token::token(token_type type) : type(type) {
 }
 
-token::token(token_type type, const std::string &lexeme)
-    : type(type), lexeme(lexeme) {
+token::token(token_type type, std::string lexeme)
+    : type(type), lexeme(std::move(lexeme)) {
 }
 
-token::token(token_type         type,
-             const std::string &lexeme,
-             const std::string &literal)
-    : type(type), lexeme(lexeme), literal(literal) {
+token::token(token_type type, std::string lexeme, std::string literal)
+    : type(type), lexeme(std::move(lexeme)), literal(std::move(literal)) {
 }
 
 void scanner::init_keywords() {
@@ -31,11 +31,11 @@ void scanner::init_keywords() {
     keywords["num"]    = tt::NUM;
 }
 
-bool scanner::has_next(size_t i) {
+auto scanner::has_next(size_t i) -> bool {
     return current + i < source.size();
 }
 
-bool scanner::is_digit(char ch) {
+auto scanner::is_digit(char ch) -> bool {
     return std::isdigit(ch);
 }
 
@@ -44,32 +44,34 @@ void scanner::add_token(token_type type) {
 }
 
 void scanner::add_token(token_type type, const std::string &literal) {
-    std::string text = source.substr(start, current - start);
+    std::string const text = source.substr(start, current - start);
     tokens.emplace_back(type, text, literal);
 }
 
-char scanner::advance() {
+auto scanner::advance() -> char {
     current++;
     return source[current - 1];
 }
 
-bool scanner::match(const std::string &expected) {
-    if (!has_next(expected.size()))
+auto scanner::match(const std::string &expected) -> bool {
+    if (!has_next(expected.size())) {
         return false;
-    if (source.substr(current, expected.size()) != expected)
+    }
+    if (source.substr(current, expected.size()) != expected) {
         return false;
+    }
     current += expected.size();
     return true;
 }
 
-char scanner::peek() {
+auto scanner::peek() -> char {
     if (!has_next()) {
         return '\0';
     }
     return source[current];
 }
 
-char scanner::peek_next() {
+auto scanner::peek_next() -> char {
     if (current + 1 >= source.size()) {
         return '\0';
     }
@@ -97,7 +99,7 @@ void scanner::read_json_keyword() {
     while (isalnum(peek()) || peek() == '_') {
         advance();
     }
-    std::string text = source.substr(start, current - start);
+    std::string const text = source.substr(start, current - start);
     if (text == "$ANY" || text == "$SELF") {
         add_token(tt::IDENTIFIER);
     }
@@ -108,10 +110,10 @@ void scanner::read_json_level() {
     while (isalnum(peek()) || peek() == '_') {
         advance();
     }
-    std::string text = source.substr(start, current - start);
-    auto        type = keywords.find(text);
+    std::string const text = source.substr(start, current - start);
+    auto              type = keywords.find(text);
     type == keywords.end() ? add_token(tt::IDENTIFIER)
-                                  : add_token(type->second);
+                                        : add_token(type->second);
 }
 
 void scanner::string() {
@@ -128,7 +130,7 @@ void scanner::string() {
 
     advance();  // пропуск для кавычки
     // добавляем слово без кавычек
-    std::string value = source.substr(start + 1, current - start - 2);
+    std::string const value = source.substr(start + 1, current - start - 2);
     add_token(tt::STRING, value);
 }
 
@@ -203,17 +205,18 @@ void scanner::scan_token() {
                 read_json_keyword();
             } else if (isalpha(token)) {
                 read_json_level();
-            } else
+            } else {
                 throw ComponentException("Unexpected character encountered.");
+            }
             break;
     }
 }
 
-scanner::scanner(const std::string &source_) : source(source_) {
+scanner::scanner(std::string source_) : source(std::move(source_)) {
     init_keywords();
 }
 
-std::vector<token> scanner::scan_tokens() {
+auto scanner::scan_tokens() -> std::vector<token> {
     while (has_next()) {
         start = current;
         scan_token();

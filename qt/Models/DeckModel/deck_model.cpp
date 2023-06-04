@@ -5,9 +5,7 @@
 DeckModel::DeckModel(std::unique_ptr<IDeck> deck, QObject *parent)
     : QAbstractListModel(parent)
 {
-    std::cout << "do: " << (deck != nullptr) << std::endl;
     deck_ = std::move(deck);
-    std::cout << "posle: " << (deck_ != nullptr) << std::endl;
 }
 
 int DeckModel::rowCount(const QModelIndex &parent) const
@@ -55,7 +53,6 @@ QModelIndex DeckModel::index(int row, int column, const QModelIndex &parent) con
 void DeckModel::load(const QString &word, QString query)
 {
     beginResetModel();
-    std::cout << int(deck_.get() != nullptr) << std::endl;
     deck_->load(word.toStdString(), query.toStdString());
     endResetModel();
 }

@@ -1,21 +1,30 @@
 #include "mainwindow.h"
-#include "AudioWidget.hpp"
+#include "AudioPluginWrapper.h"
+#include "AudiosWidget.hpp"
 #include "Card.h"
-#include "ExamplesWidget.hpp"
+#include "IAudioPluginWrapper.h"
+#include "IImagePluginWrapper.h"
 #include "IRequestable.h"
+#include "ISentencePluginWrapper.h"
 #include "IWordPluginWrapper.h"
+#include "ImagePluginWrapper.h"
 #include "ImagesWidget.hpp"
+#include "ISentencePluginWrapper.h"
+#include "SentencePluginWrapper.h"
+#include "SentencesWidget.hpp"
 #include "ui_mainwindow.h"
 #include "deck_model.h"
 #include "Deck.hpp"
 #include "WordPluginWrapper.h"
 #include "FormatProcessorPluginWrapper.h"
 #include "ServerConnection.h"
+#include <cstdlib>
 #include <filesystem>
 #include <memory>
 #include <QBoxLayout>
 #include <iostream>
 #include <iostream>
+#include <qcoreevent.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,19 +33,22 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     connection = std::make_shared<ServerConnection>(8888);
     std::unique_ptr<IWordPluginWrapper> wordPlugin = std::make_unique<WordPluginWrapper>(connection);
-    wordPlugin->init("definitions");
     std::unique_ptr<IDeck> deck = std::make_unique<Deck>(std::move(wordPlugin));
-    std::cout << "deck: " << int(deck != nullptr) << std::endl;
     deckModel = new DeckModel(std::move(deck), this);
-    examplesWidget = new ExamplesWidget;
-    ui->examplesTab->layout()->addWidget(examplesWidget);
-    audioWidget = new AudioWidget;
-    ui->audioTab->layout()->addWidget(audioWidget);
-    imagesWidget = new IMagesWidget;
-    ui->imagesTab->layout()->addWidget(imagesWidget);
     ui->deckView->setModel(deckModel);
-    std::cout << "affadfadsf " << (deckModel->deck_ != nullptr) << std::endl;
-    std::cout << ui->deckView << " " << deckModel->parent() << std::endl;
+
+    std::unique_ptr<ISentencePluginWrapper> sentencePlugin = std::make_unique<SentencePluginWrapper>(connection);
+    sentencesWidget = new SentencesWidget(std::move(sentencePlugin));
+    ui->examplesTab->layout()->addWidget(sentencesWidget);
+
+    std::unique_ptr<IAudioPluginWrapper> audioPlugin = std::make_unique<AudioPluginWrapper>(connection);
+    audiosWidget = new AudiosWidget(std::move(audioPlugin));
+    ui->audioTab->layout()->addWidget(audiosWidget);
+
+    std::unique_ptr<IImagePluginWrapper> imagePlugin = std::make_unique<ImagePluginWrapper>(connection);
+    imagesWidget = new ImagesWidget(std::move(imagePlugin));
+    ui->imagesTab->layout()->addWidget(imagesWidget);
+    
     connect(ui->searchLine, SIGNAL(returnPressed()), this, SLOT(onSearchReturned()));
     connect(ui->deckView, SIGNAL(clicked(QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
 }
@@ -57,11 +69,9 @@ void MainWindow::onSearchReturned()
     if (int_idx == -1)
     {
         deckModel->load(ui->searchLine->text(), ui->filterEdit->toPlainText());
-        std::cout << "rows = " << deckModel->rowCount() << std::endl;
         int rows = deckModel->rowCount() - 1;
         QModelIndex qm_idx = deckModel->index(deckModel->rowCount() - 1);
         ui->deckView->setCurrentIndex(qm_idx);
-        // emit ui->deckView->clicked(qm_idx);
         ui->deckView->clicked(qm_idx);
         return;
     }
@@ -107,6 +117,7 @@ void MainWindow::updateTags(const Card *card)
     if (!card) {
         return;
     }
+    currentTags = card->tags;
     ui->tagsLine->setText(QString::fromStdString(parse_tags(card->tags)));
 }
 
@@ -115,7 +126,7 @@ void MainWindow::updateExamples(const Card *card)
     if (!card) {
         return;
     }
-    examplesWidget->set(&card->examples);
+    sentencesWidget->set(card->word, card->examples);
 }
 
 void MainWindow::updateAudio(const Card *card)
@@ -123,8 +134,7 @@ void MainWindow::updateAudio(const Card *card)
     if (!card) {
         return;
     }
-    std::cout << card->audios.web[0].src << std::endl;
-    audioWidget->set(card->audios);
+    audiosWidget->set(card->word, card->audios);
 }
 
 void MainWindow::updateImages(const Card *card)
@@ -132,7 +142,7 @@ void MainWindow::updateImages(const Card *card)
     if (!card) {
         return;
     }
-    imagesWidget->set(card->images);
+    imagesWidget->set(card->word, card->images);
 }
 
 void MainWindow::setCurrentIndex(QModelIndex index)
@@ -162,11 +172,11 @@ void MainWindow::onPrevClicked()
 void MainWindow::onAddClicked() {
     Card card;
     card.word = ui->wordLine->text().toStdString();
-    // card.tags = ui->tagsLine->text().toStdString();
+    card.tags = currentTags;
     card.definition = ui->definitionEdit->toPlainText().toStdString();
-    card.examples = examplesWidget->extract();
-    card.audios = audioWidget->extract();
-    card.images = imagesWidget->extract();
+    card.examples = sentencesWidget->getChosenSentences();
+    card.audios = audiosWidget->getChosenAudio();
+    card.images = imagesWidget->getChosenImages();
     savedDeck.push_back(card);
     onNextClicked();
 }
@@ -178,4 +188,5 @@ void MainWindow::save() {
     FormatProcessorPluginWrapper savingPlugin(connection);
     savingPlugin.init("processor");
     savingPlugin.save(absolute_path);
+    exit(0);
 }

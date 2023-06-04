@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SentencesWidget</class>
+ <widget class="QWidget" name="SentencesWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="createButton">
+       <property name="text">
+        <string>Create</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="LoadButton">
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="loadSentenceLine"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>374</width>
+        <height>231</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>createButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SentencesWidget</receiver>
+   <slot>addSentence()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>30</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LoadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SentencesWidget</receiver>
+   <slot>load()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>39</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>172</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addSentence()</slot>
+  <slot>load()</slot>
+ </slots>
+</ui>

@@ -22,9 +22,9 @@ Qt5::Widgets
 connection
 deck_model
 card
-examples_viewer
-audio_viewer
-images_viewer
+sentences_widget
+audios_widget
+images_widget
 word_plugin_wrapper
 format_processor_plugin_wrapper
 )

@@ -22,7 +22,7 @@ public:
     virtual int indexOfWord(const std::string &word) const;
 
 private:
-    const size_t batch_size = 10;
+    const size_t batch_size = 20;
     std::vector<WordCards> cards_;
     std::unique_ptr<IWordPluginWrapper> wordPlugin_;
 };

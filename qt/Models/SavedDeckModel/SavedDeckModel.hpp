@@ -10,9 +10,15 @@ class SavedDeckModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    struct SavedCard {
+        Card card;
+        std::vector<bool> sentencesMask;
+        std::pair<std::vector<bool>, std::vector<bool>> audiosMask;
+        std::pair<std::vector<bool>, std::vector<bool>> imagesMask;
+    };
+
     explicit SavedDeckModel(std::vector<Card> cards, QObject *parent = nullptr);
 
-    // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
@@ -28,7 +34,7 @@ public slots:
     QModelIndex prev(const QModelIndex& index);
 
 private:
-    std::vector<Card> cards_;
+    std::vector<SavedCard> cards_;
 };
 
 #endif // SAVEDDECKMODEL_H

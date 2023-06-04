@@ -4,6 +4,7 @@
 
 Deck::Deck(std::unique_ptr<IWordPluginWrapper> wordPlugin) {
     wordPlugin_ = std::move(wordPlugin);
+    wordPlugin_->init("definitions");
 }
 
 size_t Deck::size() const {
@@ -25,14 +26,14 @@ void Deck::prev(size_t index) {
 }
 
 void Deck::load(std::string word, std::string query) {
-    std::cout << "in deck load" << std::endl;
     std::vector<Card> wordCards;
     std::string error;
     tie(wordCards, error) = wordPlugin_->get(word, query, batch_size, false);
-    std::cout << "got: " << wordCards.size() << " cards" << std::endl;
     int i = indexOfWord(word);
     if (i == -1) {
-        cards_.push_back(WordCards(word, wordCards));
+        if (!wordCards.empty()) {
+            cards_.push_back(WordCards(word, wordCards));
+        }
     }
     else {
         cards_.at(i).addCards(wordCards);

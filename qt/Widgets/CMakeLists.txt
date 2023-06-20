@@ -1,0 +1,5 @@
+add_subdirectory(Player)
+add_subdirectory(AudiosWidget)
+add_subdirectory(SentencesWidget)
+add_subdirectory(ImagesWidget)
+add_subdirectory(MainWindow)

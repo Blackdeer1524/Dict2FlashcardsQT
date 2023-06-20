@@ -1,0 +1,14 @@
+build/
+*
+!*/
+build/*
+!.gitignore
+!.gitmodules
+!/spdlog/*
+!./CMakeLists.txt
+!./README.md
+!/img/**
+!/server/**
+!/qt/**
+!/test_client/**
+!/plugins/**/*.py

@@ -1,0 +1,6 @@
+add_subdirectory(BasePluginWrapper)
+add_subdirectory(AudiosProviderWrapper)
+add_subdirectory(DefinitionsProviderWrapper)
+add_subdirectory(FormatProcessorWrapper)
+add_subdirectory(ImagesProviderWrapper)
+add_subdirectory(SentencesProviderWrapper)

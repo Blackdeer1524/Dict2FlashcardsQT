@@ -1,0 +1,6 @@
+add_subdirectory(IPluginWrapper)
+add_subdirectory(IAudiosProviderWrapper)
+add_subdirectory(IDefinitionsProviderWrapper)
+add_subdirectory(IFormatProcessorWrapper)
+add_subdirectory(IImagesProviderWrapper)
+add_subdirectory(ISentencesProviderWrapper)

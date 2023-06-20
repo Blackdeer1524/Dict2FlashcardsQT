@@ -33,7 +33,7 @@ def get(word: str):
         size = yield sentences[i : i + size], ""
         i += size
 
-    return [], ""
+    return None 
 
 
 def load():
